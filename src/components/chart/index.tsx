@@ -18,8 +18,8 @@ export default function TransactionChartSummary({ expense = 100, income = 100 }:
       options={options}
       series={[income, expense]}
       type="pie"
-      width={"100%"}
-      height={"100%"}
+      width="100%"
+      height="100%"
     />
-  );
+  )
 }

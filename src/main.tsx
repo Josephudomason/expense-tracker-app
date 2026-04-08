@@ -1,15 +1,15 @@
 
+import { ChakraProvider } from '@chakra-ui/react'
 import { createRoot } from 'react-dom/client'
+import App from './App'
+import { GlobalContextProvider } from './context'
 import './index.css'
-import App from './App.tsx'
-import { ChakraProvider, theme } from '@chakra-ui/react'
-import GlobalContextState from './context/index.tsx'
+import theme from './theme'
 
 createRoot(document.getElementById('root')!).render(
-  <GlobalContextState>
+  <GlobalContextProvider>
     <ChakraProvider theme={theme}>
       <App />
     </ChakraProvider>
-  </GlobalContextState>
-
+  </GlobalContextProvider>,
 )

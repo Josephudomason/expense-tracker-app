@@ -1,6 +1,8 @@
-import { Box, Flex, Heading, Text } from "@chakra-ui/react";
-import TransactionForm from "../add-trasaction";
-import TransactionChartSummary from "../chart";
+import { Suspense, lazy } from 'react'
+import { Box, Flex, Heading, Text } from '@chakra-ui/react'
+import TransactionForm from '../add-trasaction'
+
+const TransactionChartSummary = lazy(() => import('../chart'))
 
 
 type SummaryProps = {
@@ -11,8 +13,9 @@ type SummaryProps = {
 };
 
 export default function Summary({ onClose, isOpen, totalExpense, totalIncome }: SummaryProps) {
-  const balance = totalIncome - totalExpense;
-  const balanceColor = balance >= 0 ? "green.600" : "red.600";
+  const balance = totalIncome - totalExpense
+  const balanceColor = balance >= 0 ? 'green.600' : 'red.600'
+  const hasTransactions = totalIncome > 0 || totalExpense > 0
 
   return (
     <Box
@@ -25,7 +28,7 @@ export default function Summary({ onClose, isOpen, totalExpense, totalIncome }: 
     >
       <Flex
         height="100%"
-        direction={{ base: "column", lg: "row" }}
+        direction={{ base: 'column', lg: 'row' }}
         alignItems="center"
         justifyContent="center"
         gap={4}
@@ -38,7 +41,7 @@ export default function Summary({ onClose, isOpen, totalExpense, totalIncome }: 
           gap={2}
         >
           <Heading size="md" color={balanceColor}>
-            Balance: ${balance}
+            Balance: ${balance.toFixed(2)}
           </Heading>
 
           <Flex
@@ -52,11 +55,11 @@ export default function Summary({ onClose, isOpen, totalExpense, totalIncome }: 
             borderRadius="md"
           >
             <Flex direction="column" alignItems="center">
-              <Heading color="green.600" size="sm">${totalIncome}</Heading>
+              <Heading color="green.600" size="sm">${totalIncome.toFixed(2)}</Heading>
               <Text color="gray.600" fontSize="xs">Income</Text>
             </Flex>
             <Flex direction="column" alignItems="center">
-              <Heading color="red.600" size="sm">${totalExpense}</Heading>
+              <Heading color="red.600" size="sm">${totalExpense.toFixed(2)}</Heading>
               <Text color="gray.600" fontSize="xs">Expense</Text>
             </Flex>
           </Flex>
@@ -70,7 +73,15 @@ export default function Summary({ onClose, isOpen, totalExpense, totalIncome }: 
           alignItems="center"
           justifyContent="center"
         >
-          <TransactionChartSummary expense={totalExpense} income={totalIncome} />
+          {hasTransactions ? (
+            <Suspense fallback={<Text color="gray.500" fontSize="sm">Loading chart...</Text>}>
+              <TransactionChartSummary expense={totalExpense} income={totalIncome} />
+            </Suspense>
+          ) : (
+            <Text color="gray.500" fontSize="sm">
+              Add a transaction to see the chart.
+            </Text>
+          )}
         </Box>
       </Flex>
       <TransactionForm onClose={onClose} isOpen={isOpen} />
